@@ -1,7 +1,11 @@
+import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <>hello world</>
+    <div>
+      <p>Hello world</p>
+      {/* < UserButton afterSignOutUrl="/" /> */}
+    </div>
   );
 }

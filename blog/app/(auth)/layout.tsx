@@ -1,8 +1,9 @@
+import { ClerkProvider } from "@clerk/nextjs"
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
         <main className='auth'>
-            {children}
+           {children}
         </main>
     )
 }
