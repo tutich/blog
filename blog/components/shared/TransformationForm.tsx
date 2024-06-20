@@ -25,11 +25,13 @@ import {
 
 
 import { Input } from "@/components/ui/input"
-import { aspectRatioOptions, defaultValues, transformationTypes } from "@/constants"
+import { aspectRatioOptions, creditFee, defaultValues, transformationTypes } from "@/constants"
 import { CustomField } from "./CustomField"
-import { useState } from "react";
-import { AspectRatioKey, debounce } from "@/lib/utils"
+import { startTransition, useState, useTransition } from "react";
+import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils"
 import { getImageSize } from "next/dist/server/image-optimizer"
+import { updateCredits } from "@/lib/database/actions/user.actions"
+import MediaUploader from "./MediaUploader"
 
 
 
@@ -50,6 +52,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isTransforming, setIsTransforming] = useState(false);
     const [transformationConfig, setTransformationConfig] = useState(config);
+    const [isPending, startTransition] = useTransition();
 
 
     const initialValues = data && action === 'Update' ? {
@@ -93,7 +96,8 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                 ...prevState,
                 [type]: {
                     ...prevState?.[type],
-                    [fieldName === 'prompt' ? 'prompt' : 'to']: 
+                    [fieldName === 'prompt' ? 'prompt' : 'to' ]:
+                    value
                 }
             }))
 
@@ -101,7 +105,19 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
         }, 1000);
     }
 
-    const onTransformHandler = () => { }
+    const onTransformHandler = async () => {
+        setIsTransforming(true)
+
+        setTransformationConfig(
+            deepMergeObjects(newTransformatiion, transformationConfig)
+        )
+
+        setNewTransformation(null)
+
+        startTransition (async () => {
+            // await updateCredits(userId, creditFee)
+        }) 
+     }
 
 
     return (
@@ -184,6 +200,23 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                         )}
                     </div>
                 )}
+
+                <div>
+                    <CustomField 
+                    control={form.control}
+                    name="publicId"
+                    className="flex flex-col size-full"
+                    render={({ field }) => (
+                        <MediaUploader
+                        onValueChange={field.onChange}
+                        setImage={setImage}
+                        publicId={field.value}
+                        image={image}
+                        type={type}
+                        />
+                    )}
+                    />
+                </div>
 
                 <div className="flex flex-col gap-4">
                     <Button
