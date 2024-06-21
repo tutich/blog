@@ -32,6 +32,7 @@ import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils"
 import { getImageSize } from "next/dist/server/image-optimizer"
 import { updateCredits } from "@/lib/database/actions/user.actions"
 import MediaUploader from "./MediaUploader"
+import TransformedImage from "./TransformedImage"
 
 
 
@@ -105,6 +106,8 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
         }, 1000);
     }
 
+    // TODO; update fee
+
     const onTransformHandler = async () => {
         setIsTransforming(true)
 
@@ -115,7 +118,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
         setNewTransformation(null)
 
         startTransition (async () => {
-            // await updateCredits(userId, creditFee)
+            await updateCredits(userId, -1)
         }) 
      }
 
@@ -201,7 +204,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                     </div>
                 )}
 
-                <div>
+                <div className="media-uploader-field">
                     <CustomField 
                     control={form.control}
                     name="publicId"
@@ -216,6 +219,15 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                         />
                     )}
                     />
+
+                    <TransformedImage 
+                    image={image}
+                    type={type}
+                    title={form.getValues().title}
+                    isTransforming = {setIsTransforming}
+                    transformationConfig = {transformationConfig}
+                    />
+
                 </div>
 
                 <div className="flex flex-col gap-4">
