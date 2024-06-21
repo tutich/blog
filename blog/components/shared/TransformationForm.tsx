@@ -4,6 +4,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -27,7 +28,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { aspectRatioOptions, creditFee, defaultValues, transformationTypes } from "@/constants"
 import { CustomField } from "./CustomField"
-import { startTransition, useState, useTransition } from "react";
+import { startTransition, useEffect, useState, useTransition } from "react";
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import { updateCredits } from "@/lib/actions/user.actions"
 import MediaUploader from "./MediaUploader"
@@ -190,10 +191,15 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
         setNewTransformation(null)
 
         startTransition(async () => {
-            await updateCredits(userId, -1)
+            await updateCredits(userId, creditFee)
         })
     }
 
+    useEffect(() => {
+        if(image && (type === 'restore' || type === 'removeBackground') ) {
+            setNewTransformation(transformationType.config)
+        }
+    }, [image, transformationType.config, type])
 
     return (
         <Form {...form}>

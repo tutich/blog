@@ -8,6 +8,7 @@ import User from "../database/models/user.model";
 import Image from "../database/models/image.model";
 import { redirect } from "next/navigation";
 import { model } from "mongoose";
+import { v2 as cloudinary }  from 'cloudinary'
 
 const populateUser = (query: any) => query.populate({
     path: 'author',
@@ -94,6 +95,21 @@ export async function getImageById(imageId: string) {
       if(!image) throw new Error("Image not found");
   
       return JSON.parse(JSON.stringify(image));
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+//   Get Images
+
+export async function getAllImages({limit = 9, page = 1, searchQuery = '' } : {
+    limit?: number
+    page: 1;
+    searchQuery?: string;
+    }) {
+    try {
+      await connectToDatabase();
+  
     } catch (error) {
       handleError(error)
     }
