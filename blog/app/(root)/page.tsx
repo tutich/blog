@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default async function Home({searchParams} : SearchParamProps) {
   const page = Number(searchParams?.page) || 1;
-  const searchQuery = (searchParams?.query as String) || '';
+  const searchQuery = (searchParams?.query as string) || '';
 
   const images = await getAllImages({page, searchQuery})
 
