@@ -38,7 +38,7 @@ export async function checkoutCredits (transaction: CheckoutTransactionParams) {
     redirect(session.url!)
 }
 
-export async function  createTansaction (transaction: CreateTransactionParams) {
+export async function  createTransaction (transaction: CreateTransactionParams) {
     try {
         await connectToDatabase();
 
