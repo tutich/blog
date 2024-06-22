@@ -104,8 +104,8 @@ export async function getImageById(imageId: string) {
 //   Get Images
 
 export async function getAllImages({limit = 9, page = 1, searchQuery = '' } : {
-    limit?: number
-    page: 1;
+    limit?: number;
+    page: number;
     searchQuery?: string;
     }) {
     try {
